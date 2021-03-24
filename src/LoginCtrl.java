@@ -12,9 +12,11 @@ public class LoginCtrl extends DBConn{
         this.email = email; 
         this.password = password; 
         try {
-            loginStatement = conn.prepareStatement("SELECT * FROM User");
+            loginStatement = conn.prepareStatement("SELECT * FROM User WHERE User.email = (?) AND User.password = (?)");
         } catch (Exception e) {
             System.out.println("DB error during prepare of select from User" + e);
         }
+
+        
     }
 }
