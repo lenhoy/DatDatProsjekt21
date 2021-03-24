@@ -12,10 +12,10 @@ public class LoginCtrl extends DBConn{
         this.password = password; 
         try {
             Statement loginStatement = conn.createStatement();
-            String query = "SELECT * FROM User WHERE User.email=" + email + " AND User.password_=" + password; 
+            String query = "SELECT * FROM user_ WHERE EMail='" + email + "'" + " AND Password_='" + password + "'"; 
             ResultSet rs = loginStatement.executeQuery(query);
             while (rs.next()) {
-                System.out.println("Logget inn som" + rs.getString("name_"));
+                System.out.println(" Logget inn som " + rs.getString("name_"));
             }
             loginStatement.close();
         } catch (Exception e) {

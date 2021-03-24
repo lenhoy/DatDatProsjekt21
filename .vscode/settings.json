@@ -26,6 +26,24 @@
       "username": "Lars",
       "connectionTimeout": 60,
       "password": ""
+    },
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "Prosjekt",
+      "database": "prosjekt",
+      "username": "root",
+      "password": "123456",
+      "connectionTimeout": 60
     }
+  ],
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "mysql-connector-java-8.0.23.jar"
   ]
 }
