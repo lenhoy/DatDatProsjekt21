@@ -1,22 +1,25 @@
 import java.sql.*;
+import java.time.Instant;
 import java.util.*;
 
 public class PostCtrl extends DBConn{
 
     // Lage variabler
-    private int userID;
+    private String userID;
     private int newPostID;
     private PreparedStatement postStatement;
+    private PreparedStatement threadStatement;
+    private PreparedStatement threadInFolderStatement;
+
 
     
 
-    // Autentiser om bruker har tilgang
     // Konstruktør
-    public PostCtrl (int userID) {
+    public PostCtrl (String userID) {
         this.userID = userID;
     }
 
-    public void startThread(int courseID, String folderName, String postContent, String tag, String header){
+    public void postAThread(int courseID, String folderName, String postContent, String tag, String header){
 
         // Forberede INSERT i post tablell
         try {
@@ -36,53 +39,106 @@ public class PostCtrl extends DBConn{
 
         } catch (Exception e) {
             System.out.println("Database error ved INSERT i post"+postContent+"e:"+e);
-        }
+        } finally {
+            try {
+             if (postStatement!= null) {
+                 postStatement.close();
+             }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+         }
 
 
 
         // Insette i Thread
         try {
-            PreparedStatement threadStatement = conn.prepareStatement(
+            threadStatement = conn.prepareStatement(
                 "INSERT INTO Thread (PostID, Tag, Header) VALUES ((?), (?), (?))");
-            threadStatement.setString(1, newPostID);
+            threadStatement.setInt(1, newPostID);
             threadStatement.setString(2, tag);
             threadStatement.setString(3, header);
             threadStatement.execute();
 
         } catch (Exception e) {
             System.out.println("Feil ved insetting i thread: "+e);
-        }
+        } finally {
+            try {
+             if (threadStatement != null) {
+                 threadStatement.close();
+             }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+         }
+
+
 
 
         // Insette i Thread in folder
         try {
-            PreparedStatement threadInFolderStatement = conn.prepareStatement(
+            threadInFolderStatement = conn.prepareStatement(
                 "INSERT INTO ThreadInFolder (CourseID, FolderName, PostID) VALUES ((?), (?), (?))");
-            threadInFolderStatement.setString(1, courseID);
+            threadInFolderStatement.setInt(1, courseID);
             threadInFolderStatement.setString(2, folderName);
-            threadInFolderStatement.setString(3, newPostID);
+            threadInFolderStatement.setInt(3, newPostID);
             threadInFolderStatement.execute();
 
         } catch (Exception e) {
             System.out.println("Feil ved insetting i threadInFolder: "+e);
-        }
+        } finally {
+            try {
+             if (threadInFolderStatement != null) {
+                 threadInFolderStatement.close();
+             }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+         }
 
 
-        // Forberede insert i postedby
 
-        // Utføre neste
+
+        // Insette i Posted By
+        insertInPostedBy(userID, newPostID);
+
 
 
     }
 
-    public void postPost () {
+    public void postAReply(int superPostID, String postContent) {
+        
+    }
 
-        if (userID != IKKE_LOGGET_INN){
+    private void insertInPostedBy(String userID, int newPostID){
 
-            
+        PreparedStatement postedByStatement = null;
 
+
+        try {
+            postedByStatement = conn.prepareStatement(
+                "INSERT INTO PostedBy (Email, PostID, Date) VALUES ((?), (?), (?))");
+
+            // Lage dato timestamp 
+            Timestamp timestamp = Timestamp.from(Instant.now());
+
+            // Utføre sql, legge til rad i Posted by
+            postedByStatement.setString(1, userID);
+            postedByStatement.setInt(2, newPostID);
+            postedByStatement.setTimestamp(3, timestamp);
+            postedByStatement.execute();
+
+        } catch (Exception e) {
+            System.out.println("Feil ved insetting i postedBy: "+e);
+        } finally {
+           try {
+            if (postedByStatement != null) {
+                postedByStatement.close();
+            }
+           } catch (Exception e) {
+               System.out.println(e.getStackTrace());
+           }
         }
-
     }
 
 
