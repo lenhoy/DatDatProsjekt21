@@ -24,7 +24,7 @@ CREATE TABLE Instructor (
 
 CREATE TABLE Course (
 	CourseID INTEGER NOT NULL, 
-    Name_ VARCHAR(30), 
+    Name_ VARCHAR(100), 
     Term VARCHAR(30), 
     Anonymous BOOLEAN NOT NULL, 
     CONSTRAINT Course_PK PRIMARY KEY (CourseID)
