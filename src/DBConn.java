@@ -14,13 +14,10 @@ public abstract class DBConn {
 
             // Properties for user and password.
             Properties p = new Properties();
-            p.put("user", "Lars");           
+            p.put("user", "root");    
+            p.put("password", "123456");       
 
-<<<<<<< HEAD
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/prosjekt?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false",p);
-=======
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/?user=lenhoy",p);
->>>>>>> c9859ae4dfadf279739c6de4124406d74bf06ad0
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/prosjekt?user=root", p);
      
             System.out.println("Hello world 2!");
 
