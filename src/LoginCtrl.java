@@ -5,17 +5,23 @@ public class LoginCtrl extends DBConn{
     private String email; 
     private String name; 
     private String password; 
-    private String anonAlias; 
-    private PreparedStatement loginStatement;
+    private String anonAlias;
 
-    public void Login(String email, String password) {
+    public void login(String email, String password) {
         this.email = email; 
         this.password = password; 
         try {
-            loginStatement = conn.prepareStatement("SELECT * FROM User WHERE User.email = (?) AND User.password = (?)");
+            Statement loginStatement = conn.createStatement();
+            String query = "SELECT * FROM User WHERE User.email=" + email + " AND User.password_=" + password; 
+            ResultSet rs = loginStatement.executeQuery(query);
+            while (rs.next()) {
+                System.out.println("Logget inn som" + rs.getString("name_"));
+            }
+            loginStatement.close();
         } catch (Exception e) {
-            System.out.println("DB error during prepare of select from User" + e);
+            System.out.println("DB error during SELECT from User" + e);
         }
+        
 
         
     }

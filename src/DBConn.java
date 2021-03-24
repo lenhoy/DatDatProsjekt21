@@ -14,10 +14,9 @@ public class DBConn {
 
             // Properties for user and password.
             Properties p = new Properties();
-            p.put("user", "lenhoy");
-            p.put("password", "");           
+            p.put("user", "Lars");           
 
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1/DatDat_DB?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false",p);
+            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/prosjekt?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false",p);
      
             System.out.println("Hello world 2!");
 
