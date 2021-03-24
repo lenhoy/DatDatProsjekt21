@@ -3,7 +3,7 @@ import java.util.Properties;
 
 import javax.print.event.PrintEvent;
 
-public class DBConn {
+public abstract class DBConn {
   protected Connection conn;
   public DBConn () {
   }
@@ -16,7 +16,11 @@ public class DBConn {
             Properties p = new Properties();
             p.put("user", "Lars");           
 
+<<<<<<< HEAD
             conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/prosjekt?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false",p);
+=======
+            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/?user=lenhoy",p);
+>>>>>>> c9859ae4dfadf279739c6de4124406d74bf06ad0
      
             System.out.println("Hello world 2!");
 
