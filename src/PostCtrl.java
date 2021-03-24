@@ -7,10 +7,6 @@ public class PostCtrl extends DBConn{
     // Lage variabler
     private String userID;
     private int newPostID;
-    private PreparedStatement postStatement;
-    private PreparedStatement threadStatement;
-    private PreparedStatement threadInFolderStatement;
-
 
     
 
@@ -19,35 +15,14 @@ public class PostCtrl extends DBConn{
         this.userID = userID;
     }
 
+    // Funksjon for oppretting av en ny thread
     public void postAThread(int courseID, String folderName, String postContent, String tag, String header){
 
-        // Forberede INSERT i post tablell
-        try {
-            postStatement = conn.prepareStatement("INSERT INTO Post (?)");
-        } catch (Exception e) {
-            System.out.println("Database error ved conn INSERT INTO Post:"+e);
-        }
+        PreparedStatement threadStatement = null;
+        PreparedStatement threadInFolderStatement = null;
 
-        // Utføre insert i post
-        try {
-            postStatement.setString(1, postContent);
-
-            // Lagre inserted data for å hente ut postID
-            ResultSet postedPost =  postStatement.executeQuery();
-            postedPost.next();
-            newPostID = postedPost.getInt("PostID");
-
-        } catch (Exception e) {
-            System.out.println("Database error ved INSERT i post"+postContent+"e:"+e);
-        } finally {
-            try {
-             if (postStatement!= null) {
-                 postStatement.close();
-             }
-            } catch (Exception e) {
-                System.out.println(e.getStackTrace());
-            }
-         }
+        // Innsette i Post
+        makeNewPost(postContent);
 
 
 
@@ -97,8 +72,6 @@ public class PostCtrl extends DBConn{
          }
 
 
-
-
         // Insette i Posted By
         insertInPostedBy(userID, newPostID);
 
@@ -106,10 +79,87 @@ public class PostCtrl extends DBConn{
 
     }
 
+    // Funksjon for oppretting av enten ny followup eller reply
     public void postAReply(int superPostID, String postContent) {
-        
+
+        PreparedStatement stmt; 
+
+        // Lag selve posten
+        makeNewPost(postContent);
+
+        // Oppdatter postedBy
+        insertInPostedBy(userID, newPostID);
+
+        // Bestemm om posten er en follow up eller en reply
+        String insertInQuery;
+        if (x==y){
+            insertInQuery = "FollowUpInThread (FollowUpID, ThreadID)";
+        } else if (x == z) {
+            insertInQuery = "ReplyInFollowUp (ReplyID, FollowUpID)";
+        }
+
+        // Opprett posten som follow up. Da skal tabellen
+        // FollowUpInThread oppdatteres 
+        try {
+            stmt = conn.prepareStatement(
+                "INSERT INTO" + insertInQuery + "VALUES ((?), (?)");
+            stmt.setInt(1, newPostID);
+            stmt.setInt(2, superPostID);
+            stmt.execute();
+
+        } catch (Exception e) {
+            System.out.println("Feil ved insetting i "+insertInQuery+": "+e);
+        } finally {
+            try {
+             if (stmt != null) {
+                 stmt.close();
+             }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+         }
+
+
     }
 
+    // Intern funksjon for oppretting av rad i post tabell
+    private void makeNewPost(String postContent){
+    
+
+        PreparedStatement postStatement = null;
+
+
+        // Forberede INSERT i post tablell
+        try {
+            postStatement = conn.prepareStatement("INSERT INTO post (PostID, content) VALUES ((?), (?))");
+        } catch (Exception e) {
+            System.out.println("Database error ved conn INSERT INTO Post preparedStmt: "+e);
+        }
+
+        // Utføre insert i post
+        try {
+            postStatement.setString(2, postContent);
+            
+            // Lagre inserted data for å hente ut postID
+            postStatement.execute();
+            ResultSet postedPost =  postStatement.getResultSet();
+            postedPost.next();
+            newPostID = postedPost.getInt("PostID");
+
+        } catch (Exception e) {
+            System.out.println("Database error ved INSERT i post: "+postContent+"e:"+e);
+        } finally {
+            try {
+             if (postStatement!= null) {
+                 postStatement.close();
+             }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+         }
+    }
+
+    // Intern funksjon for oppretting av rad i postedby tabell
     private void insertInPostedBy(String userID, int newPostID){
 
         PreparedStatement postedByStatement = null;
