@@ -1,8 +1,6 @@
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        //TODO app logic here 
-
         //Use Case 1:
         LoginCtrl login1 = new LoginCtrl(); 
         login1.connect();
