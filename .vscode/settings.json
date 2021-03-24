@@ -12,6 +12,20 @@
       "username": "larmoe",
       "database": "DatDat_DB",
       "password": ""
+    },
+    {
+      "mysqlOptions": {
+        "authProtocol": "xprotocol"
+      },
+      "previewLimit": 50,
+      "server": "127.0.0.1",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "DatDat_DB",
+      "database": "DatDat_DB",
+      "username": "Lars",
+      "connectionTimeout": 60,
+      "password": ""
     }
   ]
 }
