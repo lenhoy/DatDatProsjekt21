@@ -6,7 +6,7 @@ insert into instructor values ('ins@ntnu.no');
 
 insert into course values (4145, 'Datamodellering og databasesystemer', 'Spring 2021', true), (4100, 'Fluidmekanikk', 'Spring 2021', false); 
 
-insert into folder values ('General', 4145); 
+insert into folder values ("General", 4145), ("Exam", 4145); 
 
 insert into managedby values ('ins@ntnu.no', 4145), ('ins@ntnu.no', 4100); 
 

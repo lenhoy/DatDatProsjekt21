@@ -3,21 +3,25 @@ public class Main {
 
         //Use Case 1:
         //En bruker logger inn
-        LoginCtrl login1 = new LoginCtrl(); 
-        login1.connect();
-        login1.login("a@b.c", "123");
+        LoginCtrl StudLogin = new LoginCtrl(); 
+        StudLogin.connect();
+        StudLogin.login("a@b.c", "123");
 
 
         //Use Case 2: 
         //En bruker poster et innlegg
-        PostCtrl postSession = new PostCtrl("a@b.c");
+        PostCtrl postSession = new PostCtrl(StudLogin.getEmail());
         postSession.connect();
         postSession.postAThread(4145, "Exam", "Min Thread", "Question", "Min Header");
 
 
         //USe Case 3:
         //En instruktør svarer på post med ID: 16
-        PostCtrl replySession = new PostCtrl("ins@ntnu.no");
+        LoginCtrl InstrLogin = new LoginCtrl(); 
+        InstrLogin.connect();
+        InstrLogin.login("ins@ntnu.no", "789");
+
+        PostCtrl replySession = new PostCtrl(InstrLogin.getEmail());
         replySession.connect();
         replySession.postAReply(16, "Reply 1");
 
@@ -32,7 +36,7 @@ public class Main {
         //En instruktør henter frem statistikk
         StatsCtrl stats1 = new StatsCtrl();
         stats1.connect();
-        stats1.getStats("ins@ntnu.no");
+        stats1.getStats(InstrLogin.getEmail());
         
     }
 }

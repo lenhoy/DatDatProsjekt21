@@ -73,6 +73,36 @@ public class PostCtrl extends DBConn{
         insertInPostedBy(userID, newPostID);
     }
 
+    // Funksjon for å lenke til en post
+
+    public void linkPost(int postID, int linkedID){
+        try {
+            PreparedStatement linkStmt = conn.prepareStatement("INSERT INTO linked VALUES (?), (?)");
+            linkStmt.setInt(1, postID);
+            linkStmt.setInt(2, linkedID);
+            linkStmt.execute();
+            linkStmt.close();
+        } catch (Exception e) {
+            System.out.println("Klarte ikke å lenke til innlegg " + e);
+        }
+    }
+
+    // Funksjon for å "like" en post
+
+    public void likePost(int postID) {
+        try {
+            Timestamp timestamp = Timestamp.from(Instant.now());
+            PreparedStatement linkStmt = conn.prepareStatement("INSERT INTO linked VALUES (?), (?), (?)");
+            linkStmt.setString(1, userID);
+            linkStmt.setInt(2, postID);
+            linkStmt.setTimestamp(3, timestamp);
+            linkStmt.execute();
+            linkStmt.close();
+        } catch (Exception e) {
+            System.out.println("Klarte ikke å like innlegg " + e);
+        }
+    }
+
     // Funksjon for oppretting av enten ny followup eller reply
     public void postAReply(int superPostID, String postContent) {
         

@@ -1,6 +1,16 @@
 import java.sql.*;
 
 public class LoginCtrl extends DBConn{
+    private String email; 
+    private String name; 
+
+    public String getEmail() {
+        return this.email;
+    }
+    
+    public String getName() {
+        return this.name;
+    }
 
     // Logger inn og sjekker om brukeren er i databasen
     public void login(String email, String password) {
@@ -11,6 +21,8 @@ public class LoginCtrl extends DBConn{
 
             //Skriver ut en bekreftelse på at brukeren er i databasen og har klart å logge inn
             if (rs.next()){
+                this.email = rs.getString("EMail");
+                this.name = rs.getString("name_");
                 System.out.println("Use case 1:");
                 System.out.println("Innlogging vellykket");
                 System.out.println("Logget inn som " + rs.getString("name_"));
