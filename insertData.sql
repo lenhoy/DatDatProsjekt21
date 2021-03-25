@@ -20,5 +20,5 @@ insert into studentincourse values ('a@b.c', 4100);
 insert into studentincourse values ('b@c.d', 4145);
 
 
-insert into post values (( , 'Hei alle sammen!'));
+DELETE FROM post WHERE PostID=1;
  

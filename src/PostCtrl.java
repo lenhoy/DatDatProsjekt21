@@ -2,6 +2,10 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.*;
 
+import com.ibm.dtfj.corereaders.NewAixDump;
+import com.mysql.cj.Query;
+import com.mysql.cj.conf.ConnectionUrl.Type;
+
 public class PostCtrl extends DBConn{
 
     // Lage variabler
@@ -53,7 +57,7 @@ public class PostCtrl extends DBConn{
         // Insette i Thread in folder
         try {
             threadInFolderStatement = conn.prepareStatement(
-                "INSERT INTO ThreadInFolder (CourseID, FolderName, PostID) VALUES ((?), (?), (?))");
+                "INSERT INTO threadinfolder (CourseID, Name_, PostID) VALUES ((?), (?), (?))");
             threadInFolderStatement.setInt(1, courseID);
             threadInFolderStatement.setString(2, folderName);
             threadInFolderStatement.setInt(3, newPostID);
@@ -90,34 +94,68 @@ public class PostCtrl extends DBConn{
         // Oppdatter postedBy
         insertInPostedBy(userID, newPostID);
 
+
         // Bestemm om posten er en follow up eller en reply
+        int result = -1;
+        
+        
+        // Sjekke om det blir en match i thread basert på postID
+        try {
+            Statement postTypeStmt = conn.createStatement();
+            String query = "SELECT * FROM thread WHERE PostID="+superPostID;
+            ResultSet searchThread = postTypeStmt.executeQuery(query);
+
+            if (searchThread.next()){
+                result = 1;
+            } 
+
+            postTypeStmt.close();
+
+        } catch (Exception e) {
+            System.out.println("Exception searchinThread"+e.getMessage());
+        }
+        
+
+        // Sjekke om det blir en match i reply basert på PostID
+        try {
+            Statement postTypeStmt = conn.createStatement();
+            String query = "SELECT * FROM reply WHERE PostID="+superPostID;
+            ResultSet searchReply = postTypeStmt.executeQuery(query);
+
+            if (searchReply.next()){
+                result = 2;
+            }
+            
+            postTypeStmt.close();
+
+        } catch (Exception e) {
+            System.out.println("Exception searchinReply"+e.getMessage());
+        }
+        
+
         String insertInQuery;
-        if (x==y){
-            insertInQuery = "FollowUpInThread (FollowUpID, ThreadID)";
-        } else if (x == z) {
-            insertInQuery = "ReplyInFollowUp (ReplyID, FollowUpID)";
+        if (result == 1){
+            insertInQuery = "followupinthread (FollowUpID, ThreadID)";
+        } else if (result == 2) {
+            insertInQuery = "replyinfollowup (ReplyID, FollowUpID)";
+        } else {
+            throw new IllegalArgumentException("Finner ikke posten som skal svares på");
         }
 
         // Opprett posten som follow up. Da skal tabellen
         // FollowUpInThread oppdatteres 
         try {
-            stmt = conn.prepareStatement(
-                "INSERT INTO" + insertInQuery + "VALUES ((?), (?)");
+            String query = "INSERT INTO " + insertInQuery + " VALUES ((?), (?))";
+            stmt = conn.prepareStatement(query);
             stmt.setInt(1, newPostID);
             stmt.setInt(2, superPostID);
             stmt.execute();
 
+            stmt.close();
+
         } catch (Exception e) {
             System.out.println("Feil ved insetting i "+insertInQuery+": "+e);
-        } finally {
-            try {
-             if (stmt != null) {
-                 stmt.close();
-             }
-            } catch (Exception e) {
-                System.out.println(e.getStackTrace());
-            }
-         }
+        }
 
 
     }
@@ -131,21 +169,15 @@ public class PostCtrl extends DBConn{
 
         // Forberede INSERT i post tablell
         try {
-            postStatement = conn.prepareStatement("INSERT INTO post (PostID, content) VALUES ((?), (?))");
+            postStatement = conn.prepareStatement("INSERT INTO post (content) VALUES (?)");
         } catch (Exception e) {
             System.out.println("Database error ved conn INSERT INTO Post preparedStmt: "+e);
         }
 
         // Utføre insert i post
         try {
-            postStatement.setString(2, postContent);
-            
-            // Lagre inserted data for å hente ut postID
+            postStatement.setString(1, postContent);
             postStatement.execute();
-            ResultSet postedPost =  postStatement.getResultSet();
-            postedPost.next();
-            newPostID = postedPost.getInt("PostID");
-
         } catch (Exception e) {
             System.out.println("Database error ved INSERT i post: "+postContent+"e:"+e);
         } finally {
@@ -157,6 +189,21 @@ public class PostCtrl extends DBConn{
                 System.out.println(e.getStackTrace());
             }
          }
+
+         // Hente ut postID til nyeste posten
+         
+         try {
+            Statement stmt =  conn.createStatement();
+            String query = "SELECT PostID from post WHERE PostID >= ALL (SELECT PostID from post)";
+             
+            ResultSet resSet = stmt.executeQuery(query);
+            resSet.next();
+            newPostID = resSet.getInt("PostID");
+             
+             
+         } catch (Exception e) {
+             //TODO: handle exception
+         }
     }
 
     // Intern funksjon for oppretting av rad i postedby tabell
@@ -167,7 +214,7 @@ public class PostCtrl extends DBConn{
 
         try {
             postedByStatement = conn.prepareStatement(
-                "INSERT INTO PostedBy (Email, PostID, Date) VALUES ((?), (?), (?))");
+                "INSERT INTO postedby (Email, PostID, Date_) VALUES ((?), (?), (?))");
 
             // Lage dato timestamp 
             Timestamp timestamp = Timestamp.from(Instant.now());
