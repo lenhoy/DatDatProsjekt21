@@ -4,7 +4,7 @@ import java.util.*;
 public class SearchCtrl extends DBConn{
     
     // Søker i databasen etter 'searchTerm', IDene til postene som inneholder 'searchTerm' returneres. 
-    public void search (String searchTerm) {
+    public List<Integer> search (String searchTerm) {
         try {
             Statement searchStmt = conn.createStatement();
             String query = "SELECT PostID FROM post WHERE content LIKE '%" + searchTerm + "%'"; 
@@ -22,11 +22,14 @@ public class SearchCtrl extends DBConn{
                 System.out.println("Use case 4:");
                 System.out.println("PostID til poster som inneholder: " + searchTerm + " er: " + postID);
                 System.out.println("");
+                return postID;
             } else {
                 System.out.println("Ingen poster innholder, " + searchTerm);
+                return null;
             }
         } catch (Exception e) {
             System.out.println("DB error during SELECT from Post " + e);
+            return null;
         }
     }
 }
