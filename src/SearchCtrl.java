@@ -16,6 +16,8 @@ public class SearchCtrl extends DBConn{
                 postID.add(rs.getInt("PostID"));
             }
             searchStmt.close();
+
+            //Skriver ut listen av PostIDer som inneholder søket, gitt at det er noen
             if (postID.size() > 0) {
                 System.out.println("Use case 4:");
                 System.out.println("PostID til poster som inneholder: " + searchTerm + " er: " + postID);

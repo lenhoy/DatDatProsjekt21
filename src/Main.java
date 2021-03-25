@@ -10,13 +10,13 @@ public class Main {
         //Use Case 2: 
         PostCtrl postSession = new PostCtrl("a@b.c");
         postSession.connect();
-        postSession.postAThread(4145, "Exam", "Min tredje Thread", "Tag2", "Min tredje Header");
+        postSession.postAThread(4145, "Exam", "Min tredje Thread", "Question", "Min tredje Header");
 
 
         //USe Case 3:
         PostCtrl replySession = new PostCtrl("ins@ntnu.no");
         replySession.connect();
-        replySession.postAReply(6, "Reply 1");
+        replySession.postAReply(16, "Reply 1");
 
 
         //Use Case 4:

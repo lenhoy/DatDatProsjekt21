@@ -7,10 +7,9 @@ public abstract class DBConn {
     }
     public void connect() {
         try {
-            // Class.forName("com.mysql.jdbc.Driver").newInstance(); when you are using MySQL 5.7
          	Class.forName("com.mysql.cj.jdbc.Driver"); 
 
-          // Properties for user and password.
+          	//Properties for user and password.
           	Properties p = new Properties();
 			p.put("user", "root");    
 			p.put("password", "123456");       

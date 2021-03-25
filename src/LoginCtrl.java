@@ -9,6 +9,8 @@ public class LoginCtrl extends DBConn{
             Statement loginStatement = conn.createStatement();
             String query = "SELECT * FROM user_ WHERE EMail='" + email + "'" + " AND Password_='" + password + "'"; 
             ResultSet rs = loginStatement.executeQuery(query);
+
+            //Skriver ut en bekreftelse på at brukeren er i databasen og har klart å logge inn
             if (rs.next()){
                 System.out.println("Use case 1:");
                 System.out.println("Innlogging vellykket");
