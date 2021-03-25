@@ -12,8 +12,6 @@ public class PostCtrl extends DBConn{
     private String userID;
     private int newPostID;
 
-    
-
     // Konstruktør
     public PostCtrl (String userID) {
         this.userID = userID;
@@ -27,8 +25,6 @@ public class PostCtrl extends DBConn{
 
         // Innsette i Post
         makeNewPost(postContent);
-
-
 
         // Innsette i Thread
         try {
@@ -113,7 +109,6 @@ public class PostCtrl extends DBConn{
         } catch (Exception e) {
             System.out.println("Exception searchinThread " + e.getMessage());
         }
-        
 
         // Sjekke om det blir en match i reply basert på PostID
         try {
@@ -175,7 +170,7 @@ public class PostCtrl extends DBConn{
             System.out.println("Database error ved conn INSERT INTO Post preparedStmt: "+e);
         }
 
-        // Utføre insert i post
+        // Utføre INSERT i post
         try {
             postStatement.setString(1, postContent);
             postStatement.execute();
@@ -183,9 +178,9 @@ public class PostCtrl extends DBConn{
             System.out.println("Database error ved INSERT i post: "+postContent+"e:"+e);
         } finally {
             try {
-             if (postStatement!= null) {
-                 postStatement.close();
-             }
+                if (postStatement!= null) {
+                    postStatement.close();
+                }
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
@@ -212,7 +207,6 @@ public class PostCtrl extends DBConn{
 
         PreparedStatement postedByStatement = null;
 
-
         try {
             postedByStatement = conn.prepareStatement(
                 "INSERT INTO postedby (Email, PostID, Date_) VALUES ((?), (?), (?))");
@@ -229,17 +223,13 @@ public class PostCtrl extends DBConn{
         } catch (Exception e) {
             System.out.println("Feil ved insetting i postedBy: "+e);
         } finally {
-           try {
-            if (postedByStatement != null) {
-                postedByStatement.close();
-            }
-           } catch (Exception e) {
+            try {
+                if (postedByStatement != null) {
+                    postedByStatement.close();
+                }
+            } catch (Exception e) {
                System.out.println(e.getStackTrace());
-           }
+            }
         }
     }
-
-
-
-
 }
