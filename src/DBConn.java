@@ -1,8 +1,6 @@
 import java.sql.*;
 import java.util.Properties;
 
-import javax.print.event.PrintEvent;
-
 public abstract class DBConn {
     protected Connection conn;
     public DBConn () {

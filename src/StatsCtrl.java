@@ -1,5 +1,4 @@
 import java.sql.*;
-import java.util.*;
 
 public class StatsCtrl extends DBConn{
     //Sjekker om brukeren som ser etter statistikk er en instruktør.

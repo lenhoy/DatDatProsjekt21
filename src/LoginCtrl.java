@@ -1,16 +1,10 @@
 import java.sql.*;
 
 public class LoginCtrl extends DBConn{
-    private String email; 
-    private String name; 
-    private String password; 
-    private String anonAlias;
 
 
-    // Logger inn og sjekker om 
+    // Logger inn og sjekker om brukeren er i databasen
     public void login(String email, String password) {
-        this.email = email; 
-        this.password = password; 
         try {
             Statement loginStatement = conn.createStatement();
             String query = "SELECT * FROM user_ WHERE EMail='" + email + "'" + " AND Password_='" + password + "'"; 
