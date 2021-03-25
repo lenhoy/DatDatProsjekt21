@@ -8,19 +8,18 @@ public abstract class DBConn {
     public DBConn () {
     }
     public void connect() {
-      try {
+        try {
             // Class.forName("com.mysql.jdbc.Driver").newInstance(); when you are using MySQL 5.7
-          Class.forName("com.mysql.cj.jdbc.Driver"); 
+         	Class.forName("com.mysql.cj.jdbc.Driver"); 
 
           // Properties for user and password.
-          Properties p = new Properties();
-          p.put("user", "root");    
-          p.put("password", "123456");       
+          	Properties p = new Properties();
+			p.put("user", "root");    
+			p.put("password", "123456");       
 
-          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/prosjekt?user=root", p);
-        } catch (Exception e)
-      {
-            throw new RuntimeException("Unable to connect", e);
-      }
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/prosjekt?", p);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to connect ", e);
+		}
     }
 }

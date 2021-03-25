@@ -24,7 +24,7 @@ public class SearchCtrl extends DBConn{
                 System.out.println("Ingen poster innholder, " + searchTerm);
             }
         } catch (Exception e) {
-            System.out.println("DB error during SELECT from Post" + e);
+            System.out.println("DB error during SELECT from Post " + e);
         }
     }
 }

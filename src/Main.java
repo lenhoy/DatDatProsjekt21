@@ -10,9 +10,13 @@ public class Main {
         //Use Case 2: 
         PostCtrl postSession = new PostCtrl("a@b.c");
         postSession.connect();
-        //postSession.postAThread(4145, "General", "Min tredje Thread", "Tag2", "Min tredje Header");
+        postSession.postAThread(4145, "Exam", "Min tredje Thread", "Tag2", "Min tredje Header");
 
-        postSession.postAReply(6, "Reply 1");
+
+        //USe Case 3:
+        PostCtrl replySession = new PostCtrl("ins@ntnu.no");
+        replySession.connect();
+        replySession.postAReply(6, "Reply 1");
 
 
         //Use Case 4:
@@ -20,7 +24,10 @@ public class Main {
         search1.connect();
         search1.search("WAL");
 
-
+        //Use Case 5: 
+        StatsCtrl stats1 = new StatsCtrl();
+        stats1.connect();
+        stats1.getStats("ins@ntnu.no");
         
     }
 }
