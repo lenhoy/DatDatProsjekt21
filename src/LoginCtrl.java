@@ -2,7 +2,6 @@ import java.sql.*;
 
 public class LoginCtrl extends DBConn{
 
-
     // Logger inn og sjekker om brukeren er i databasen
     public void login(String email, String password) {
         try {

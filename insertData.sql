@@ -12,7 +12,15 @@ insert into managedby values ('ins@ntnu.no', 4145), ('ins@ntnu.no', 4100);
 
 insert into studentincourse values ('a@b.c', 4145), ('a@b.c', 4100), ('b@c.d', 4145);
 
-nsert into post (content) values ("hei"), ("Jeg er uenig i det."), ("Jeg liker tomat!"), ("Nei, tomater er ekle!");
+insert into post (content) values ("Hei alle sammen!"), ("Waluigi er best i Mario Kart"), ("hei"), ("Jeg er uenig i det."), ("Jeg liker tomat!"), ("Nei, tomater er ekle!");
+
+insert into thread values (1, "Announcement", "Nytt Semester"), (2, "Announcement", "Upopulær mening"), (5, "Announcement", "Tomat er en frukt");
+
+insert into threadinfolder values (4145, "General", 1), (4145, "General", 2), (4145, "General", 5);
+
+insert into followup values (3), (4), (6);
+
+insert into followupinthread values (3, 1), (4, 2), (6, 5);
 
 insert into postedby values ("ins@ntnu.no", 1, '2021-01-05 11:05:00'), 
 ("a@b.c", 2, '2021-02-01 18:19:45'), 
